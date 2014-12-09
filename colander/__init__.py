@@ -1936,8 +1936,16 @@ class _SchemaNode(object):
                 raise Invalid(self, _('Required'))
             if isinstance(appstruct, deferred): # unbound schema with deferreds
                 raise Invalid(self, _('Required'))
+            if cstruct is None:
+                return None
             # We never deserialize or validate the missing value
             return appstruct
+
+        if appstruct is None:
+            if self.missing is required:
+                raise Invalid(self, _('Required'))
+            else:
+                return None
 
         if self.validator is not None:
             if not isinstance(self.validator, deferred): # unbound
