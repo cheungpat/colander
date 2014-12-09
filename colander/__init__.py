@@ -510,8 +510,9 @@ class Mapping(SchemaType):
     the values in the returned dictionary is the serialized
     representation of the null value for its type.
     """
-    def __init__(self, unknown='ignore'):
+    def __init__(self, unknown='ignore', missing=null):
         self.unknown = unknown
+        self.missing = missing
 
     def _set_unknown(self, value):
         if not value in ('ignore', 'raise', 'preserve'):
@@ -559,7 +560,7 @@ class Mapping(SchemaType):
 
         for num, subnode in enumerate(node.children):
             name = subnode.name
-            subval = value.pop(name, null)
+            subval = value.pop(name, self.missing)
             if subval is drop or (subval is null and subnode.default is drop):
                 continue
             try:
